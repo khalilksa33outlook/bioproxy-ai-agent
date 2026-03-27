@@ -1,6 +1,61 @@
 import sys
 import os
 import re
+import requests
+import json
+
+# Inside your CEOIntelAgent class, add this method:
+
+    def synthesize_with_ollama(self, query, context_docs):
+        """Sends the search results to Ollama to generate a human response."""
+        
+        # Combine the top database rows into one 'context' block
+        context_text = "\n".join(context_docs)
+        
+        prompt = f"""
+        You are the AI Executive Assistant for the IICC Group (Insight International Contracting Company).
+        Use the following internal data to answer the CEO's question in a professional, concise manner.
+        
+        DATA FROM ERP & DOCUMENTS:
+        {context_text}
+        
+        QUESTION: {query}
+        
+        ANSWER:
+        """
+
+        try:
+            response = requests.post(
+                "http://localhost:11434/api/generate",
+                json={
+                    "model": "llama3",
+                    "prompt": prompt,
+                    "stream": False
+                }
+            )
+            return response.json().get("response", "I couldn't synthesize a response.")
+        except Exception as e:
+            return f"⚠️ Ollama Error: {e}. (Make sure Ollama is running)"
+
+# Now, update your route_query to use this synthesis:
+
+    def route_query(self, query):
+        query_lower = query.lower()
+        is_financial = any(word in query_lower for word in self.fin_keywords)
+        
+        # 1. Get the raw data from ChromaDB
+        results = self.memory.search(query, n_results=5)
+        raw_docs = results['documents'][0]
+        
+        # 2. Let Ollama explain it
+        print("\n🧠 [AI THINKING...]")
+        final_answer = self.synthesize_with_ollama(query, raw_docs)
+        
+        print("\n🤖 [EXECUTIVE SUMMARY]:")
+        print(final_answer)
+        
+        # 3. Still show the source for verification (SysAdmin style)
+        print("\n📍 [SOURCES USED]:", [m.get('id') for m in results['metadatas'][0]])
 
 # Add src to path
 sys.path.append(os.path.join(os.getcwd(), 'src'))

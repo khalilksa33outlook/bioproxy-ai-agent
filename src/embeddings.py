@@ -1,7 +1,12 @@
 import os
 import chromadb
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
+load_dotenv()
 
+# This tells the huggingface_hub library to use your token automatically
+if os.getenv("HF_TOKEN"):
+    os.environ["HUGGINGFACE_HUB_TOKEN"] = os.getenv("HF_TOKEN")
 class AgentMemory:
     def __init__(self):
         # Local path for the Vector Database
