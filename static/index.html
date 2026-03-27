@@ -3,92 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IICC Group Intelligence</title>
+    <title>IICC Executive Command</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
 
-    <nav class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-10 shadow-lg">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <nav class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 p-2 rounded-lg">
-                    <i class="fas fa-microchip text-xl"></i>
+                <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-900/20">
+                    <i class="fas fa-chart-line text-xl"></i>
                 </div>
-                <h1 class="text-xl font-bold tracking-tight">IICC <span class="text-blue-400">AI COMMAND</span></h1>
+                <h1 class="text-xl font-bold tracking-tighter">IICC <span class="text-blue-500">INTEL</span></h1>
             </div>
-            <div class="text-sm text-slate-400 hidden md:block">
-                <i class="fas fa-location-dot mr-2"></i> Madinah Host | 16 Sectors Active
+
+            <div class="flex items-center space-x-2 bg-slate-800 p-1 rounded-full border border-slate-700">
+                <span class="pl-3 text-xs font-bold text-slate-500 uppercase">Focus:</span>
+                <select id="sector-filter" class="bg-transparent text-sm font-semibold outline-none pr-4 cursor-pointer text-blue-400">
+                    <option value="ALL">All 16 Sectors</option>
+                    <option value="IICC">IICC (Contracting)</option>
+                    <option value="IHTS">IHTS (Textile Sourcing)</option>
+                    <option value="ITMC">ITMC (Manufacturing)</option>
+                    <option value="ITT">ITT (Travel & Tourism)</option>
+                    <option value="AGRI">Agriculture</option>
+                </select>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6">
-        <div id="chat-container" class="space-y-6 mb-24 min-h-[60vh]">
-            <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-sm max-w-[80%]">
-                <p class="text-sm font-semibold text-blue-400 mb-1">SYSTEM</p>
-                <p>Welcome, CEO. I am connected to the ERP and your private documents. How can I assist with the group's operations today?</p>
-            </div>
-        </div>
-
-        <div class="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-900 via-slate-900 to-transparent">
-            <div class="max-w-4xl mx-auto relative">
-                <input type="text" id="user-input" 
-                    placeholder="Ask about finances, sectors, or employees..." 
-                    class="w-full bg-slate-800 border border-slate-700 rounded-full py-4 pl-6 pr-16 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xl transition-all">
-                <button onclick="sendQuery()" class="absolute right-2 top-2 bottom-2 bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-full transition-colors">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+    <main class="max-w-4xl mx-auto p-6 pb-32">
+        <div id="chat-container" class="space-y-6">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mt-1">
+                    <i class="fas fa-robot text-xs"></i>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-2xl rounded-tl-none border border-slate-800 shadow-sm max-w-[85%]">
+                    <p class="text-sm">Systems online. All sectors reporting from Madinah host. How can I assist with your 2026 operations?</p>
+                </div>
             </div>
         </div>
     </main>
+
+    <div class="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-950 via-slate-950 to-transparent">
+        <div class="max-w-4xl mx-auto relative group">
+            <input type="text" id="user-input" 
+                placeholder="Type your query..." 
+                class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-5 pl-6 pr-16 focus:outline-none focus:border-blue-500 shadow-2xl transition-all placeholder:text-slate-600">
+            <button onclick="sendQuery()" class="absolute right-3 top-3 bottom-3 bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl transition-all active:scale-95">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 
     <script>
         async function sendQuery() {
             const input = document.getElementById('user-input');
             const container = document.getElementById('chat-container');
+            const sector = document.getElementById('sector-filter').value;
             const query = input.value.trim();
             if (!query) return;
 
-            // User Message
+            // Display User Message
             container.innerHTML += `
-                <div class="flex justify-end">
-                    <div class="bg-blue-600 p-4 rounded-2xl shadow-md max-w-[80%]">
-                        <p>${query}</p>
+                <div class="flex justify-end items-start space-x-3">
+                    <div class="bg-blue-600 p-4 rounded-2xl rounded-tr-none shadow-lg max-w-[85%]">
+                        <p class="text-sm font-medium">${query}</p>
                     </div>
                 </div>`;
             
             input.value = '';
-            window.scrollTo(0, document.body.scrollHeight);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
-            // API Call
+            // Add "Thinking" indicator
+            const thinkingId = "think-" + Date.now();
+            container.innerHTML += `<div id="${thinkingId}" class="text-xs text-slate-500 animate-pulse ml-12">Analyzing ${sector} data...</div>`;
+
             try {
                 const response = await fetch('/ask', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: query })
+                    body: JSON.stringify({ prompt: `[SECTOR: ${sector}] ${query}` })
                 });
                 const data = await response.json();
+                document.getElementById(thinkingId).remove();
 
-                // Bot Response
+                // Display Bot Response
                 container.innerHTML += `
-                    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-sm max-w-[90%]">
-                        <p class="text-sm font-semibold text-blue-400 mb-1">AI ASSISTANT</p>
-                        <p class="leading-relaxed">${data.answer}</p>
-                        <div class="mt-3 flex flex-wrap gap-2">
-                            ${data.sources.map(s => `<span class="text-[10px] bg-slate-700 px-2 py-1 rounded text-slate-300">#${s.id}</span>`).join('')}
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center mt-1">
+                            <i class="fas fa-brain text-[10px] text-blue-400"></i>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-2xl rounded-tl-none border border-slate-800 shadow-xl max-w-[90%]">
+                            <p class="text-sm leading-relaxed text-slate-200">${data.answer}</p>
+                            <div class="mt-4 flex flex-wrap gap-2 opacity-50">
+                                ${data.sources.map(s => `<span class="text-[9px] bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-slate-400 font-mono uppercase">${s.type || 'REF'}</span>`).join('')}
+                            </div>
                         </div>
                     </div>`;
             } catch (err) {
-                container.innerHTML += `<div class="text-red-400 text-center p-4">Error connecting to AI Host.</div>`;
+                document.getElementById(thinkingId).innerHTML = `<span class="text-red-500 text-xs">Connection Error. Is the Madinah host offline?</span>`;
             }
-            window.scrollTo(0, document.body.scrollHeight);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        // Handle Enter Key
-        document.getElementById('user-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendQuery();
-        });
+        document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendQuery(); });
     </script>
 </body>
 </html>
