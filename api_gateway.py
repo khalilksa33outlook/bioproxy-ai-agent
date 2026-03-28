@@ -79,4 +79,4 @@ async def ask_ceo_agent(request: QueryRequest):
 if __name__ == "__main__":
     import uvicorn
     # Listen on all interfaces so your Samsung device can connect via IP
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)
